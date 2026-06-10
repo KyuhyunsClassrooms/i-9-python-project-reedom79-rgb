@@ -1,101 +1,54 @@
 # AI 활용 자유 주제 파이썬 미니 프로젝트
 # 이름 또는 학번: 
 # 프로젝트 주제: 
+import math
 
-# ============================================================
-# 사용 안내
-# ------------------------------------------------------------
-# 이 파일은 예시 골격입니다.
-# 그대로 제출하지 말고, 반드시 자신의 주제에 맞게 수정하세요.
-#
-# 필수 조건
-# 1. 2차원 리스트 사용
-# 2. 함수 2개 이상, 가능하면 3개 이상 분리
-# 3. 조건문 사용
-# 4. 반복문 사용
-# 5. 실행 결과 출력
-# ============================================================
+# 함수 1: 별 정보 입력
+def input_stars():
+    stars = []  # 2차원 리스트
 
+    count = int(input("입력할 별의 개수를 입력하세요: "))
 
-# ------------------------------------------------------------
-# 1. 데이터 준비: 2차원 리스트
-# ------------------------------------------------------------
-# 아래 예시는 "활동 추천 프로그램"입니다.
-# 자신의 주제에 맞게 data를 만드세요.
-#
-# 현재 열의 의미:
-# 0번 열: 활동 이름
-# 1번 열: 필요한 시간(분)
-# 2번 열: 추천 기분
-# 3번 열: 활동 유형
-# ------------------------------------------------------------
+    for i in range(count):
+        print(f"\n{i+1}번째 별 정보 입력")
+        name = input("별 이름: ")
+        flux = float(input("밝기(Flux): "))
 
-activities = [
-    ["산책하기", 30, "피곤", "운동"],
-    ["짧은 낮잠", 20, "피곤", "휴식"],
-    ["좋아하는 음악 듣기", 10, "우울", "휴식"],
-    ["문제집 3쪽 풀기", 40, "차분", "공부"],
-    ["방 정리하기", 25, "답답", "생활"],
-    ["친구에게 연락하기", 15, "우울", "소통"],
-]
+        stars.append([name, flux])
+
+    return stars
 
 
-# ------------------------------------------------------------
-# 2. 함수 정의
-# ------------------------------------------------------------
-
-def show_intro():
-    """프로그램 제목과 안내를 출력한다."""
-    print("=" * 40)
-    print("AI 활용 자유 주제 파이썬 미니 프로젝트")
-    print("예시: 기분과 시간에 따른 활동 추천기")
-    print("=" * 40)
+# 함수 2: 밝기 등급 계산
+def calculate_magnitude(flux, reference_flux=1000):
+    magnitude = -2.5 * math.log10(flux / reference_flux)
+    return round(magnitude, 2)
 
 
-def get_user_input():
-    """사용자에게 기분과 남은 시간을 입력받는다."""
-    mood = input("현재 기분을 입력하세요. 예: 피곤, 우울, 차분, 답답: ")
-    minutes = int(input("사용 가능한 시간을 분 단위로 입력하세요: "))
-    return mood, minutes
+# 함수 3: 결과 출력
+def print_results(stars):
+    print("\n=== 별의 밝기 등급 계산 결과 ===")
+
+    for star in stars:
+        name = star[0]
+        flux = star[1]
+
+        mag = calculate_magnitude(flux)
+
+        # 조건문 사용
+        if mag < 1:
+            level = "매우 밝음"
+        elif mag < 3:
+            level = "밝음"
+        else:
+            level = "어두움"
+
+        print(f"\n별 이름: {name}")
+        print(f"밝기(Flux): {flux}")
+        print(f"등급(Magnitude): {mag}")
+        print(f"판정: {level}")
 
 
-def find_recommendations(data, mood, minutes):
-    """2차원 리스트를 반복하며 조건에 맞는 활동을 찾는다."""
-    results = []
-
-    for row in data:
-        name = row[0]
-        required_minutes = row[1]
-        recommended_mood = row[2]
-        activity_type = row[3]
-
-        # 조건문: 사용자의 기분과 시간이 활동 조건에 맞는지 판단한다.
-        if recommended_mood == mood and required_minutes <= minutes:
-            results.append([name, required_minutes, activity_type])
-
-    return results
-
-
-def print_result(results):
-    """추천 결과를 출력한다."""
-    print("\n[추천 결과]")
-
-    if len(results) == 0:
-        print("조건에 맞는 활동이 없습니다.")
-        print("시간을 늘리거나 다른 기분을 입력해 보세요.")
-    else:
-        for item in results:
-            print(f"- {item[0]} / {item[1]}분 / 유형: {item[2]}")
-
-
-def main():
-    show_intro()
-    mood, minutes = get_user_input()
-    results = find_recommendations(activities, mood, minutes)
-    print_result(results)
-
-
-# ------------------------------------------------------------
-# 3. 프로그램 실행
-# ------------------------------------------------------------
-main()
+# 프로그램 실행
+stars = input_stars()
+print_results(stars)
